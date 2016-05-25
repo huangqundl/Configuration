@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ### load modules
-modprobe gre
+#modprobe gre
 modprobe openvswitch
-modprobe libcrc32c
+#modprobe libcrc32c
 
 #### setup ovsdb
 #ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
