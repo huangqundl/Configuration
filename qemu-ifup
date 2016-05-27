@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "Executing /etc/qemu-ifup"
+echo "Bringing up $1 for bridged mode..."
+sudo /sbin/ifconfig $1 0.0.0.0 up
+echo "Adding $1 to br0..."
+sudo ovs-vsctl add-port br0 $1
+sleep 2

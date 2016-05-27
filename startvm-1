@@ -10,9 +10,9 @@
 #       "$@"
 
 USERID=$(whoami)
-precreationg=$(/usr/bin/ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
-sudo /usr/bin/ip tuntap add user $USERID mode tap
-postcreation=$(/usr/bin/ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
+precreationg=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
+sudo ip tuntap add user $USERID mode tap
+postcreation=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
 IFACE=$(comm -13 <(echo "$precreationg") <(echo "$postcreation"))
 
 echo $IFACE
