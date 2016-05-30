@@ -3,4 +3,4 @@
 echo "Executing /etc/qemu-ifdown"
 sudo /sbin/ifconfig $1 0.0.0.0 down
 sudo ovs-vsctl del-port br0 $1
-sudo /usr/bin/ip link delete dev $1
+sudo ip link delete dev $1
