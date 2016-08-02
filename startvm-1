@@ -9,22 +9,33 @@
 #       -name "Arch VM 1" \
 #       "$@"
 
-USERID=$(whoami)
-precreationg=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
-sudo ip tuntap add user $USERID mode tap
-postcreation=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
-IFACE=$(comm -13 <(echo "$precreationg") <(echo "$postcreation"))
+#USERID=$(whoami)
+#precreationg=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
+#sudo ip tuntap add user $USERID mode tap
+#postcreation=$(ip tuntap list | /usr/bin/cut -d: -f1 | /usr/bin/sort)
+#IFACE=$(comm -13 <(echo "$precreationg") <(echo "$postcreation"))
+#
+#echo $IFACE
+#
+#macaddr='72:49:ef:dc:e4:01'
+#
+#qemu-system-x86_64 -enable-kvm \
+#       -cpu host \
+#       -m 512M \
+#       -name "Arch VM 1" \
+#       -drive file=ArchVM-1.img \
+#       -net nic,macaddr=$macaddr -net tap,ifname="$IFACE" \
+#       $*
+#
+##./startvm -boot once=d -cdrom
 
-echo $IFACE
-
-macaddr='72:49:ef:dc:e4:01'
-
-qemu-system-x86_64 -enable-kvm \
-       -cpu host \
-       -m 512M \
-       -name "Arch VM 1" \
-       -drive file=ArchVM-1.img \
-       -net nic,macaddr=$macaddr -net tap,ifname="$IFACE" \
-       $*
-
-#./startvm -boot once=d -cdrom
+sudo qemu-system-x86_64 -enable-kvm \
+    -name "Arch VM 1" \
+    -cpu host \
+    -m 512 -smp 4 \
+    -hda ArchVM-1.img  \
+    -chardev socket,id=char1,path=/usr/local/var/run/openvswitch/vhost-user1 \
+    -netdev type=vhost-user,id=mynet1,chardev=char1,vhostforce \
+    -device virtio-net-pci,mac=00:00:00:00:00:01,netdev=mynet1 \
+    -object memory-backend-file,id=mem1,size=512M,mem-path=/dev/hugepages,share=on \
+    -numa node,memdev=mem1 -mem-prealloc
